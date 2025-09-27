@@ -13,6 +13,7 @@ import Message from "../components/Message";
 import type { ChatMessage } from "../types/ChatMessage";
 import EmojiPicker from "emoji-picker-react";
 import type { EmojiClickData } from "emoji-picker-react";
+import userMessage from "../assets/avatar-2.jpg";
 
 export default function ChatPage() {
   const [message, setMessage] = useState<string>("");
@@ -88,7 +89,7 @@ export default function ChatPage() {
         <div className="flex items-center gap-3">
           <div className="relative">
             <img
-              src="public/avatar-2.jpg"
+              src={userMessage}
               alt="user profile"
               className="w-12 h-12 rounded-full border-2 border-white object-cover shadow-sm"
             />

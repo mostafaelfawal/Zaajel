@@ -17,6 +17,9 @@ import type { UserChatType } from "../types/userChat";
 import UserChat from "../components/UserChatCard";
 import WelcomeMain from "../components/WelocomeMain";
 import ChatPage from "./ChatPage";
+import userAvatar from "../assets/avatar-1.png";
+import user2 from "../assets/avatar-2.jpg";
+import user3 from "../assets/avatar-3.jpg";
 
 export default function Mainpage() {
   const [showModal, setModal] = useState(false);
@@ -27,7 +30,7 @@ export default function Mainpage() {
       name: "Mike Chen",
       message: "Thanks for the project files!",
       time: "1:45 PM",
-      avatar: "/public/avatar-2.jpg",
+      avatar: user2,
       isRead: true,
       isActive: true,
     },
@@ -35,7 +38,7 @@ export default function Mainpage() {
       name: "Alex Rodriguez",
       message: "Perfect! Let's schedule the meeting",
       time: "1:45 PM",
-      avatar: "/public/avatar-3.jpg",
+      avatar: user3,
       isRead: false,
       isActive: false,
     },
@@ -168,7 +171,7 @@ export default function Mainpage() {
           <div className="mt-auto border-t border-t-gray-200 flex gap-3 px-2 pt-4 items-center">
             <img
               className="outline-3 outline-zaajel-primary w-12 h-12 rounded-full object-cover border-2 border-white"
-              src="/public/avatar-1.png"
+              src={userAvatar}
               alt="User avatar"
             />
             <div className="flex-1 min-w-0">
