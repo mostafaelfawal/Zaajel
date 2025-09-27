@@ -76,6 +76,7 @@ export default function ChatPage() {
     };
     setMessages([...messages, newMsg]);
     setMessage("");
+    setShowEmoji(false);
   };
 
   const handleEmojiClick = (emojiData: EmojiClickData) => {

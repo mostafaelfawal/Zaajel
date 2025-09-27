@@ -53,7 +53,7 @@ export default function Mainpage() {
     <Tooltip.Provider>
       <div className="flex h-screen font-sans">
         {/* Sidebar */}
-        <aside className="w-80 border-r border-gray-200 p-6 flex flex-col bg-white">
+        <aside className="w-80 border-r border-gray-200 p-6 sm:flex hidden flex-col bg-white">
           <header className="flex justify-between items-center mb-6">
             <div className="flex gap-2 items-center">
               <FaDove
