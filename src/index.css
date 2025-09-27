@@ -1,0 +1,45 @@
+@import "tailwindcss";
+/* @custom-variant dark (&:where(.dark, .dark *)); */
+
+@theme {
+  --color-zaajel-primary: #0891b2;
+  --color-zaajel-secondary: #06b6d4;
+  --color-zaajel-text-secondary: #cefafe;
+  --color-error: #f91a1a;
+  --color-warning: #f91a1a;
+  --color-info: #f91a1a;
+}
+
+button {
+  cursor: pointer;
+}
+
+.active {
+  background-color: #0890b220;
+  color: var(--color-zaajel-primary);
+} /* Scrollbar styles for modern browsers */
+::-webkit-scrollbar {
+  width: 8px; /* عرض الشريط */
+  height: 8px; /* ارتفاع الشريط الأفقي لو موجود */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* لون الخلفية للشريط */
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-zaajel-primary); /* لون المقبض */
+  border-radius: 8px;
+  border: 2px solid #f1f1f1; /* فراغ حول المقبض */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-zaajel-secondary);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-zaajel-primary) #f1f1f1;
+}
