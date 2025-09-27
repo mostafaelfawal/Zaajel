@@ -14,7 +14,7 @@ import {
 import { useState } from "react";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import type { UserChatType } from "../types/userChat";
-import UserChat from "../components/UserChat";
+import UserChat from "../components/UserChatCard";
 import WelcomeMain from "../components/WelocomeMain";
 import ChatPage from "./ChatPage";
 
@@ -151,26 +151,16 @@ export default function Mainpage() {
           {/* Conversation list */}
           <ul className="flex flex-col gap-2 overflow-y-auto">
             {messages.map((chat, idx) => (
-              <Tooltip.Root key={idx}>
-                <Tooltip.Trigger asChild>
-                  <UserChat
-                    name={chat.name}
-                    message={chat.message}
-                    time={chat.time}
-                    avatar={chat.avatar}
-                    isRead={chat.isRead}
-                    isActive={chat.isActive}
-                    openChat={() => setInChat(true)}
-                  />
-                </Tooltip.Trigger>
-                <Tooltip.Content
-                  side="right"
-                  className="bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-lg"
-                >
-                  {chat.message}
-                  <Tooltip.Arrow className="fill-gray-800" />
-                </Tooltip.Content>
-              </Tooltip.Root>
+              <UserChat
+                key={idx}
+                name={chat.name}
+                message={chat.message}
+                time={chat.time}
+                avatar={chat.avatar}
+                isRead={chat.isRead}
+                isActive={chat.isActive}
+                openChat={() => setInChat(true)}
+              />
             ))}
           </ul>
 

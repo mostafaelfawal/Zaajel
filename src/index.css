@@ -4,10 +4,16 @@
 @theme {
   --color-zaajel-primary: #0891b2;
   --color-zaajel-secondary: #06b6d4;
+  --color-zaajel-primary-dark: #05809f;
   --color-zaajel-text-secondary: #cefafe;
   --color-error: #f91a1a;
   --color-warning: #f91a1a;
   --color-info: #f91a1a;
+}
+
+*::selection {
+  background: #1fd7f7ad;
+  color: black;
 }
 
 button {
@@ -17,7 +23,9 @@ button {
 .active {
   background-color: #0890b220;
   color: var(--color-zaajel-primary);
-} /* Scrollbar styles for modern browsers */
+}
+
+/* Scrollbar styles for modern browsers */
 ::-webkit-scrollbar {
   width: 8px; /* عرض الشريط */
   height: 8px; /* ارتفاع الشريط الأفقي لو موجود */
