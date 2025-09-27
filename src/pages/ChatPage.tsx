@@ -18,7 +18,7 @@ import userMessage from "../assets/avatar-2.jpg";
 export default function ChatPage() {
   const [message, setMessage] = useState<string>("");
   const [showEmoji, setShowEmoji] = useState<boolean>(false);
-  const sendSound = new Audio("public/sounds/send.MP3");
+  const sendSound = new Audio("src/assets/sounds/send.MP3");
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       title: "Hey! How are you doing today?",
@@ -80,7 +80,6 @@ export default function ChatPage() {
 
   const handleEmojiClick = (emojiData: EmojiClickData) => {
     setMessage((prev) => prev + emojiData.emoji);
-    setShowEmoji(false);
   };
   return (
     <div className="flex flex-col w-full">
@@ -173,6 +172,7 @@ export default function ChatPage() {
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
                 addMessage(message);
               }
             }}
