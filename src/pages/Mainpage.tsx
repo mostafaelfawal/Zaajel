@@ -5,14 +5,14 @@ import { FaDoorOpen } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import type { UserChatType } from "../types/userChat";
 // Components
-import UserChat from "../components/UserChatCard";
-import WelcomeMain from "../components/WelocomeMain";
-import ChatsSettings from "../components/ChatsSettings";
-import SearchAdd from "../components/SearchAdd";
-import UserInfo from "../components/UserInfo";
-import SideBarHidder from "../components/SideBarHidder";
+import UserChat from "../components/mainPageComponents/UserChatCard";
+import WelcomeMain from "../components/mainPageComponents/WelocomeMain";
+import ChatsSettings from "../components/mainPageComponents/ChatsSettings";
+import SearchAdd from "../components/mainPageComponents/SearchAdd";
+import UserInfo from "../components/mainPageComponents/UserInfo";
+import SideBarHidder from "../components/mainPageComponents/SideBarHidder";
 import Modal from "../components/Modal";
-import UserSearch from "../components/UserSearch";
+import UserSearch from "../components/mainPageComponents/UserSearch";
 
 import ChatPage from "./ChatPage";
 import { doc, getDoc, serverTimestamp, type DocumentData } from "firebase/firestore";

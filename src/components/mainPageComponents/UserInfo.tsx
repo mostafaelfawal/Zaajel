@@ -1,6 +1,6 @@
 import { FaEllipsisV, FaUser } from "react-icons/fa";
-import Tooltips from "./Tooltips";
-import StateCircle from "./StateCircle";
+import Tooltips from "../Tooltips";
+import StateCircle from "../StateCircle";
 
 export default function UserInfo({
   avatar,

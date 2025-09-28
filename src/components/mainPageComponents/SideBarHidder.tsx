@@ -1,5 +1,5 @@
 import { FaDove, FaSignOutAlt } from "react-icons/fa";
-import Tooltips from "./Tooltips";
+import Tooltips from "../Tooltips";
 
 export default function SideBarHidder({
   openModal,

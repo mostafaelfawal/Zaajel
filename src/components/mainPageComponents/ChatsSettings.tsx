@@ -1,5 +1,5 @@
 import { FaCog, FaComment } from "react-icons/fa";
-import Tooltips from "./Tooltips";
+import Tooltips from "../Tooltips";
 
 export default function ChatsSettings() {
   return (

@@ -1,5 +1,6 @@
-import type { UserChatType } from "../types/userChat";
-import Tooltips from "./Tooltips";
+import type { UserChatType } from "../../types/userChat";
+import StateCircle from "../StateCircle";
+import Tooltips from "../Tooltips";
 
 export default function UserChat({
   name,
@@ -16,13 +17,14 @@ export default function UserChat({
         onClick={openChat}
         className="flex gap-3 cursor-pointer hover:bg-gray-100 duration-300 p-2 rounded-xl items-center"
       >
-        <img
-          className={`w-12 h-12 rounded-full object-cover ${
-            isActive && "outline-3 outline-zaajel-primary border-2 border-white"
-          }`}
-          src={avatar}
-          alt={`${name} avatar`}
-        />
+        <div className="relative">
+          <img
+            className="w-12 h-12 rounded-full object-cover"
+            src={avatar}
+            alt={`${name} avatar`}
+          />
+          <StateCircle state={isActive} />
+        </div>
         <div className="flex-1 min-w-0">
           <div className="flex justify-between">
             <h3 className="font-semibold text-gray-800 truncate">{name}</h3>

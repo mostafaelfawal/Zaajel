@@ -1,9 +1,9 @@
 import { FaPlus, FaSearch } from "react-icons/fa";
-import Tooltips from "./Tooltips";
 import { collection, getDocs, query, limit } from "firebase/firestore";
-import { db } from "../firebase";
 import { useEffect } from "react";
-import type { UserType } from "../types/userType";
+import type { UserType } from "../../types/userType";
+import { db } from "../../firebase";
+import Tooltips from "../Tooltips";
 
 export default function SearchAdd({
   openModal,
