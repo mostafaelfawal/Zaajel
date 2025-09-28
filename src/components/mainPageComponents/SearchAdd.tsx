@@ -2,8 +2,9 @@ import { FaPlus, FaSearch } from "react-icons/fa";
 import { collection, getDocs, query, limit } from "firebase/firestore";
 import { useEffect } from "react";
 import type { UserType } from "../../types/userType";
-import { db } from "../../firebase";
+import { db, rtdb } from "../../firebase";
 import Tooltips from "../Tooltips";
+import { ref, onValue } from "firebase/database";
 
 export default function SearchAdd({
   openModal,
@@ -14,27 +15,43 @@ export default function SearchAdd({
   openModal: () => void;
   setModalType: () => void;
   modalType: string;
-  setZaajelUsers: (data: UserType[]) => void;
+  setZaajelUsers: React.Dispatch<React.SetStateAction<UserType[]>>;
 }) {
   useEffect(() => {
     if (modalType !== "conversation") return;
-    
+
     async function getUsers() {
       const usersRef = collection(db, "users");
 
-      // إنشاء query مع حد 7 مستخدمين
+      // نجيب 7 مستخدمين من Firestore
       const usersQuery = query(usersRef, limit(7));
       const snapshot = await getDocs(usersQuery);
 
-      const usersData = snapshot.docs.map((doc) => ({
+      const usersData: UserType[] = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...(doc.data() as Omit<UserType, "id">),
       }));
 
+      // أول مرة نحطهم من غير state
       setZaajelUsers(usersData);
+
+      // نسمع لحالة كل مستخدم من RTDB
+      usersData.forEach((user) => {
+        const statusRef = ref(rtdb, `status/${user.id}`);
+        onValue(statusRef, (snap) => {
+          const data = snap.val();
+
+          setZaajelUsers((prev: UserType[]) =>
+            prev.map((u: UserType) =>
+              u.id === user.id ? { ...u, state: data?.state ?? false } : u
+            )
+          );
+        });
+      });
     }
+
     getUsers();
-  }, [modalType]);
+  }, [modalType, setZaajelUsers]);
 
   const modal = () => {
     openModal();
