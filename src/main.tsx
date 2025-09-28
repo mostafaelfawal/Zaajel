@@ -4,11 +4,14 @@ import "./index.css";
 import App from "./App.tsx";
 import { Toaster } from "react-hot-toast";
 import { BrowserRouter } from "react-router-dom";
+import { Provider } from "@radix-ui/react-tooltip";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
-      <App />
+      <Provider>
+        <App />
+      </Provider>
     </BrowserRouter>
     <Toaster position="bottom-right" />
   </StrictMode>

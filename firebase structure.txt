@@ -1,0 +1,46 @@
+users/
+  u1/
+    name
+    email
+    avatar
+    state
+    friends/   ← بدل array
+      u2/
+        since: 2025-09-27
+      u3/
+        since: 2025-09-27
+
+chats/
+  chat_u1_u2/
+    type: "private"
+    members: ["u1", "u2"]
+    lastMessage: "Hey Sara"
+    lastMessageAt: serverTimestamp()
+    messages/
+      msg1/
+        senderId: "u1"
+        text: "Hey Sara"
+        createdAt: serverTimestamp()
+      msg2/
+        senderId: "u2"
+        text: "Hi Ali 👋"
+        createdAt: serverTimestamp()
+        readStatus/
+            u1/
+                lastReadAt: serverTimestamp()
+            u2/
+                lastReadAt: serverTimestamp()
+
+  chat_dev_group/
+    type: "group"
+    members: ["u1", "u2", "u3"]
+    groupName: "Developers"
+    groupAvatar: "https://..."
+    createdBy: "u1"
+    lastMessage: "Let's meet tomorrow"
+    lastMessageAt: serverTimestamp()
+    messages/
+      msg1/
+        senderId: "u3"
+        text: "Let's meet tomorrow"
+        createdAt: serverTimestamp()

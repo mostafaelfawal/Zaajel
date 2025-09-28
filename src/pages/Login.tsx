@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaDove, FaEnvelope, FaGoogle, FaLock } from "react-icons/fa";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 import {
   browserLocalPersistence,
   browserSessionPersistence,
@@ -16,6 +16,8 @@ import InputField from "../components/InputField";
 import toast from "react-hot-toast";
 import type { inputType } from "../types/form_typs";
 import { FirebaseError } from "firebase/app";
+import { doc, setDoc } from "firebase/firestore";
+import type { UserType } from "../types/userType";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -30,6 +32,14 @@ export default function LoginPage() {
 
   const [isSignup, setIsSignup] = useState(false);
   const [errors, setErrors] = useState<inputType>({});
+  const saveUserToFireStore = ({ id, name, email, avatar }: UserType): void => {
+    const userRef = doc(db, "users", id);
+    setDoc(userRef, {
+      name: name,
+      email: email,
+      avatar: avatar,
+    });
+  };
 
   function validateForm() {
     const newErrors: inputType = {};
@@ -54,13 +64,18 @@ export default function LoginPage() {
     try {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
-
       const user = result.user;
       toast.success(
         !isSignup
           ? `Welcome back ${user.displayName || "User"} 👋`
           : `Account created successfully 🎉 \n Welcome ${user.displayName} to Zaajel`
       );
+      saveUserToFireStore({
+        id: user.uid,
+        name: user.displayName || "User",
+        email: user.email || "No Email",
+        avatar: user.photoURL || "",
+      });
     } catch (error) {
       if (
         error instanceof FirebaseError &&
@@ -103,8 +118,6 @@ export default function LoginPage() {
       remember ? browserLocalPersistence : browserSessionPersistence
     );
 
-    const fullName: string = `${name.firstName.trim()} ${name.lastName.trim()}`;
-
     if (isSignup) {
       try {
         const userCredential = await createUserWithEmailAndPassword(
@@ -113,8 +126,19 @@ export default function LoginPage() {
           password
         );
 
-        await updateProfile(userCredential.user, {
+        const user = userCredential.user;
+        const fullName = `${name.firstName.trim()} ${name.lastName.trim()}`;
+
+        await updateProfile(user, {
           displayName: fullName,
+        });
+
+        // ✨ حفظ بيانات المستخدم في Firestore
+        saveUserToFireStore({
+          id: user.uid,
+          name: fullName,
+          email: user.email || "No Email",
+          avatar: "",
         });
 
         toast.success(

@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import {
+  FaArrowLeft,
   FaDove,
   FaEllipsisV,
   FaMicrophone,
@@ -14,6 +15,7 @@ import type { ChatMessage } from "../types/ChatMessage";
 import EmojiPicker from "emoji-picker-react";
 import type { EmojiClickData } from "emoji-picker-react";
 import userMessage from "../assets/avatar-2.jpg";
+import StateCircle from "../components/StateCircle";
 
 export default function ChatPage() {
   const [message, setMessage] = useState<string>("");
@@ -87,13 +89,16 @@ export default function ChatPage() {
       <header className="h-fit w-full flex items-center px-6 py-3 bg-zaajel-primary text-white shadow-md justify-between">
         {/* User Info */}
         <div className="flex items-center gap-3">
+          <button className="md:hidden block p-2 hover:bg-white/10 rounded-full transition duration-200">
+            <FaArrowLeft />
+          </button>
           <div className="relative">
             <img
               src={userMessage}
               alt="user profile"
               className="w-12 h-12 rounded-full border-2 border-white object-cover shadow-sm"
             />
-            <span className="bg-green-500 rounded-full w-3.5 h-3.5 absolute bottom-0 right-0 border-2 border-white"></span>
+            <StateCircle state />
           </div>
           <div className="leading-tight">
             <h2 className="font-semibold text-lg">Mike Chen</h2>
@@ -103,17 +108,17 @@ export default function ChatPage() {
 
         {/* Action Buttons */}
         <div className="flex gap-3 items-center">
-          <Tooltips label="Call">
+          <Tooltips side="bottom" label="Call">
             <button className="p-2 rounded-full hover:bg-white/10 transition duration-200">
               <FaPhoneAlt size={16} />
             </button>
           </Tooltips>
-          <Tooltips label="Video Call">
+          <Tooltips side="bottom" label="Video Call">
             <button className="p-2 rounded-full hover:bg-white/10 transition duration-200">
               <FaVideo size={18} />
             </button>
           </Tooltips>
-          <Tooltips label="More Options">
+          <Tooltips side="bottom" label="More Options">
             <button className="p-2 rounded-full hover:bg-white/10 transition duration-200">
               <FaEllipsisV size={16} />
             </button>
@@ -155,13 +160,13 @@ export default function ChatPage() {
 
       {/* Footer Input */}
       <footer className="px-6 py-4 bg-white border-t border-gray-200 flex gap-2 items-center">
-        <Tooltips label="Attach file">
+        <Tooltips side="top" label="Attach file">
           <button className="p-2 text-gray-500 hover:text-zaajel-secondary transition-colors">
             <FaPaperclip size={20} />
           </button>
         </Tooltips>
 
-        <Tooltips label="Voice message">
+        <Tooltips side="top" label="Voice message">
           <button className="p-2 text-gray-500 hover:text-zaajel-secondary transition-colors">
             <FaMicrophone size={20} />
           </button>
@@ -184,7 +189,7 @@ export default function ChatPage() {
               focus:ring-zaajel-primary focus:bg-white transition-all resize-none overflow-hidden"
           />
 
-          <Tooltips label="Emoji">
+          <Tooltips side="top" label="Emoji">
             <span>
               <FaSmile
                 onClick={() => setShowEmoji(!showEmoji)}
@@ -200,7 +205,7 @@ export default function ChatPage() {
           )}
         </div>
 
-        <Tooltips label="Send">
+        <Tooltips side="top" label="Send">
           <button
             onClick={() => addMessage(message)}
             className="w-10 h-10 rounded-full bg-zaajel-primary hover:bg-zaajel-secondary duration-300 min-w-10 flex justify-center items-center text-white"
