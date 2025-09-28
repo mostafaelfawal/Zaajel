@@ -2,7 +2,7 @@ import { FaPlus, FaSearch } from "react-icons/fa";
 import { collection, getDocs, query, limit } from "firebase/firestore";
 import { useEffect } from "react";
 import type { UserType } from "../../types/userType";
-import { db, rtdb } from "../../firebase";
+import { auth, db, rtdb } from "../../firebase";
 import Tooltips from "../Tooltips";
 import { ref, onValue } from "firebase/database";
 
@@ -27,10 +27,12 @@ export default function SearchAdd({
       const usersQuery = query(usersRef, limit(7));
       const snapshot = await getDocs(usersQuery);
 
-      const usersData: UserType[] = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...(doc.data() as Omit<UserType, "id">),
-      }));
+      const usersData: UserType[] = snapshot.docs
+        .filter((doc) => doc.id !== auth.currentUser?.uid)
+        .map((doc) => ({
+          id: doc.id,
+          ...(doc.data() as Omit<UserType, "id">),
+        }));
 
       // أول مرة نحطهم من غير state
       setZaajelUsers(usersData);

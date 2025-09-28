@@ -1,11 +1,13 @@
 import Message from "../Message";
+import type { ChatMessage } from "../../types/ChatMessage";
+import { auth } from "../../firebase";
 
 export default function MessageSection({
   messages,
   message,
   messagesEndRef,
 }: {
-  messages: { title: string; date: string; userSide: boolean }[];
+  messages: ChatMessage[];
   message: string;
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
 }) {
@@ -15,8 +17,8 @@ export default function MessageSection({
         <Message
           key={idx}
           title={m.title}
-          date={m.date}
-          userSide={m.userSide}
+          createdAt={m.createdAt}
+          userSide={m.from === auth.currentUser?.uid}
         />
       ))}
 
@@ -37,7 +39,6 @@ export default function MessageSection({
         </div>
       )}
 
-      {/* 👇 الـ ref يفضل ثابت هنا آخر الـ main */}
       <div ref={messagesEndRef} />
     </main>
   );

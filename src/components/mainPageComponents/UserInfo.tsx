@@ -18,7 +18,6 @@ export default function UserInfo({
           <img
             className="outline-3 outline-zaajel-primary w-12 h-12 rounded-full object-cover border-2 border-white"
             src={avatar}
-            alt="User avatar"
           />
         ) : (
           <FaUser className="outline-3 outline-zaajel-primary text-zaajel-secondary w-12 h-12 rounded-full object-cover border-2 border-white" />

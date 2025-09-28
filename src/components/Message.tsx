@@ -1,6 +1,6 @@
-import type { ChatMessage } from "../types/ChatMessage";
+import type { Timestamp } from "firebase/firestore";
 
-export default function Message({ title, date, userSide }: ChatMessage) {
+export default function Message({ title, createdAt, userSide }: {title: string; createdAt: Timestamp, userSide: boolean}) {
   return (
     <div
       className={`w-full flex ${userSide ? "justify-start" : "justify-end"}`}
@@ -20,7 +20,7 @@ export default function Message({ title, date, userSide }: ChatMessage) {
             userSide ? "ml-1" : "text-right mr-1"
           }`}
         >
-          {date}
+          {createdAt?.toDate ? createdAt.toDate().toLocaleTimeString() : ""}
         </p>
       </div>
     </div>

@@ -1,23 +1,36 @@
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft, FaUser } from "react-icons/fa";
 import StateCircle from "../../StateCircle";
 
-export default function UserInfo() {
+export default function UserInfo({
+  name,
+  state,
+  avatar,
+}: {
+  name: string;
+  state: boolean;
+  avatar: string;
+}) {
   return (
     <div className="flex items-center gap-3">
       <button className="md:hidden block p-2 hover:bg-white/10 rounded-full transition duration-200">
         <FaArrowLeft />
       </button>
       <div className="relative">
-        <img
-          src="/assets/avatar-2.jpg"
-          alt="user profile"
-          className="w-12 h-12 rounded-full border-2 border-white object-cover shadow-sm"
-        />
-        <StateCircle state />
+        {avatar ? (
+          <img
+            className="outline-3 outline-zaajel-primary w-12 h-12 rounded-full object-cover border-2 border-white"
+            src={avatar}
+          />
+        ) : (
+          <FaUser className="outline-3 outline-zaajel-primary text-zaajel-secondary w-12 h-12 rounded-full object-cover border-2 border-white" />
+        )}
+        <StateCircle state={state} />
       </div>
       <div className="leading-tight">
-        <h2 className="font-semibold text-lg">Mike Chen</h2>
-        <p className="text-zaajel-text-secondary text-sm">Online</p>
+        <h2 className="font-semibold text-lg">{name}</h2>
+        <p className="text-zaajel-text-secondary text-sm">
+          {state ? "Online" : "Offline"}
+        </p>
       </div>
     </div>
   );

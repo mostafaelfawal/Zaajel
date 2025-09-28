@@ -15,7 +15,12 @@ import Modal from "../components/Modal";
 import UserSearch from "../components/mainPageComponents/UserSearch";
 
 import ChatPage from "./ChatPage";
-import { doc, getDoc, serverTimestamp, type DocumentData } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  serverTimestamp,
+  type DocumentData,
+} from "firebase/firestore";
 import type { UserType } from "../types/userType";
 import { ref, set } from "firebase/database";
 
@@ -25,6 +30,8 @@ export default function Mainpage() {
   const [inChat, setInChat] = useState(false);
   const [userData, setUserData] = useState<DocumentData | null>(null);
   const [zaajelUsers, setZaajelUsers] = useState<UserType[]>([]);
+  const [selectedUser, setSelectedUser] = useState<string>("");
+  const [selectedChat, setSelectedChat] = useState<string>("");
 
   useEffect(() => {
     async function fetchUser() {
@@ -125,7 +132,11 @@ export default function Mainpage() {
       </aside>
 
       {/* Main Content */}
-      {inChat ? <ChatPage /> : <WelcomeMain />}
+      {inChat ? (
+        <ChatPage CID={selectedChat} uid={selectedUser} />
+      ) : (
+        <WelcomeMain />
+      )}
 
       {/* Logout Modal */}
       {showModal && modalType === "logout" && (
@@ -177,10 +188,15 @@ export default function Mainpage() {
               {zaajelUsers.map((user) => (
                 <UserSearch
                   key={user.id}
+                  id={user.id}
                   name={user.name}
                   email={user.email}
                   avatar={user.avatar}
                   isActive={user.state}
+                  closeModal={() => setModal(false)}
+                  setUserId={setSelectedUser}
+                  setSelectedChat={setSelectedChat}
+                  openChat={() => setInChat(true)}
                 />
               ))}
             </div>

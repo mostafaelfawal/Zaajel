@@ -1,12 +1,18 @@
 import { FaUser } from "react-icons/fa";
 import Tooltips from "../Tooltips";
 import StateCircle from "../StateCircle";
+import { auth } from "../../firebase";
 
 type UserSearchProps = {
   name: string;
   email: string;
   avatar: string;
   isActive?: boolean;
+  id: string;
+  closeModal: VoidFunction;
+  setUserId: (id: string) => void;
+  setSelectedChat: (cid: string) => void;
+  openChat: VoidFunction;
 };
 
 export default function UserSearch({
@@ -14,10 +20,31 @@ export default function UserSearch({
   email,
   avatar,
   isActive,
+  id,
+  closeModal,
+  setUserId,
+  setSelectedChat,
+  openChat,
 }: UserSearchProps) {
+  function startChat(uid: string) {
+    closeModal();
+    setUserId(uid);
+
+    const currentUserId = auth.currentUser?.uid;
+    const chatId =
+      currentUserId && uid
+        ? [currentUserId, uid].sort().join("_")
+        : `${currentUserId}_${uid}`;
+
+    setSelectedChat(chatId);
+    openChat();
+  }
   return (
     <Tooltips label={`Start new chat whit ${name}`} side="right">
-      <article className="flex gap-3 cursor-pointer hover:bg-gray-100 duration-300 p-2 rounded-xl items-center border border-zaajel-secondary bg-white mb-2">
+      <article
+        onClick={() => startChat(id)}
+        className="flex gap-3 cursor-pointer hover:bg-gray-100 duration-300 p-2 rounded-xl items-center border border-zaajel-secondary bg-white mb-2"
+      >
         <div className="relative">
           {avatar ? (
             <img

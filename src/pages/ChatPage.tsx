@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { ref, onValue, off } from "firebase/database";
 // Components
 import Footer from "../components/ChatPageComponents/Footer";
 //Types
@@ -6,47 +7,79 @@ import type { ChatMessage } from "../types/ChatMessage";
 import type { EmojiClickData } from "emoji-picker-react";
 import MessageSection from "../components/ChatPageComponents/MessageSection";
 import Header from "../components/ChatPageComponents/Header";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+} from "firebase/firestore";
+import { auth, db, rtdb } from "../firebase";
+import toast from "react-hot-toast";
 
-export default function ChatPage() {
-  const [message, setMessage] = useState<string>("");
+export default function ChatPage({ CID, uid }: { CID: string; uid: string }) {
+  const [message, setMessage] = useState<string>(""); // Input message
   const [showEmoji, setShowEmoji] = useState<boolean>(false);
   const sendSound = new Audio("/sounds/send.mp3");
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      title: "Hey! How are you doing today?",
-      date: "10:30 AM",
-      userSide: true,
-    },
-    {
-      title:
-        "I'm doing great! Just finished my morning workout. How about you?",
-      date: "10:32 AM",
-      userSide: false,
-    },
-    {
-      title:
-        "That's awesome! I'm planning to hit the gym later today. Any recommendations for a good workout routine?",
-      date: "10:35 AM",
-      userSide: true,
-    },
-    {
-      title:
-        "Sure! I'd recommend starting with some cardio and then moving to strength training. Want me to send you my routine?",
-      date: "10:37 AM",
-      userSide: false,
-    },
-    {
-      title: "That would be perfect! Thank you so much 🙏",
-      date: "10:39 AM",
-      userSide: true,
-    },
-    {
-      title:
-        "No problem! I'll send it over in a few minutes. Also, don't forget to warm up properly before starting 💪",
-      date: "10:41 AM",
-      userSide: false,
-    },
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [userTo, setUserTo] = useState<{
+    name: string;
+    state: boolean;
+    avatar: string;
+  }>({ name: "", state: false, avatar: "" });
+
+  useEffect(() => {
+    if (!CID || !uid) return;
+
+    const fetchChatData = async () => {
+      // 👤 جلب بيانات المستخدم الأساسية
+      const toRef = doc(db, "users", uid);
+      const toUserData = await getDoc(toRef);
+
+      if (toUserData.exists()) {
+        const userData = toUserData.data();
+
+        // 🔄 مراقبة الحالة أولاً
+        const statusRef = ref(rtdb, `status/${uid}`);
+        const unsubStatus = onValue(statusRef, (snapshot) => {
+          const statusData = snapshot.val();
+
+          setUserTo({
+            name: userData.name,
+            state: statusData?.state ?? false,
+            avatar: userData.avatar || "",
+          });
+        });
+
+        // 💬 مراقبة الرسائل
+        const messagesRef = collection(db, "chats", CID, "messages");
+        const q = query(messagesRef, orderBy("createdAt", "asc"));
+
+        const unsubMessages = onSnapshot(q, (snapshot) => {
+          const msgs = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...(doc.data() as ChatMessage),
+          }));
+          setMessages(msgs);
+        });
+
+        // دالة التنظيف
+        return () => {
+          off(statusRef, "value", unsubStatus);
+          unsubMessages();
+        };
+      }
+    };
+
+    const cleanup = fetchChatData();
+
+    return () => {
+      cleanup.then((cleanupFn) => cleanupFn && cleanupFn());
+    };
+  }, [CID, uid]);
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -54,37 +87,42 @@ export default function ChatPage() {
     messagesEndRef.current?.scrollIntoView();
   }, [messages]);
 
-  const addMessage = (newMessage: string) => {
-    if (!newMessage.trim()) return;
+  const addMessage = async (newMessage: string) => {
     sendSound.play();
-    const newMsg: ChatMessage = {
+    if (!newMessage.trim() || !CID || !auth.currentUser) return;
+
+    // ✅ استخدم serverTimestamp بشكل صحيح
+    const msg = {
+      from: auth.currentUser.uid,
+      to: uid,
       title: newMessage,
-      date: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      }),
-      userSide: true,
+      createdAt: serverTimestamp(), // ✅ بدون تحويل لـ Timestamp
+      Fseen: false,
+      Tseen: false,
     };
-    setMessages([...messages, newMsg]);
-    setMessage("");
-    setShowEmoji(false);
+
+    try {
+      setMessage("");
+      setShowEmoji(false);
+      await addDoc(collection(db, "chats", CID, "messages"), msg);
+    } catch (error) {
+      toast.error("Error sending message: " + error);
+    }
   };
 
   const handleEmojiClick = (emojiData: EmojiClickData) => {
     setMessage((prev) => prev + emojiData.emoji);
   };
+
   return (
     <div className="flex flex-col w-full">
-      <Header />
-
+      <Header name={userTo.name} state={userTo.state} avatar={userTo.avatar} />{" "}
       {/* Message Section */}
       <MessageSection
         messages={messages}
         message={message}
         messagesEndRef={messagesEndRef}
       />
-
       {/* Footer Input */}
       <Footer
         message={message}
