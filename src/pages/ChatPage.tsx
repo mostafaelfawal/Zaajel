@@ -16,11 +16,12 @@ import EmojiPicker from "emoji-picker-react";
 import type { EmojiClickData } from "emoji-picker-react";
 import userMessage from "../assets/avatar-2.jpg";
 import StateCircle from "../components/StateCircle";
+import sendSoundFile from "../assets/sounds/send.mp3";
 
 export default function ChatPage() {
   const [message, setMessage] = useState<string>("");
   const [showEmoji, setShowEmoji] = useState<boolean>(false);
-  const sendSound = new Audio("src/assets/sounds/send.MP3");
+  const sendSound = new Audio(sendSoundFile);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       title: "Hey! How are you doing today?",
