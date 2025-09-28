@@ -11,6 +11,13 @@
   --color-info: #f91a1a;
 }
 
+@font-face {
+  font-family: "ReadexPro";
+  src: url("/fonts/ReadexPro-VariableFont_HEXP,wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+}
+
 *::selection {
   background: #1fd7f7ad;
   color: black;
@@ -23,6 +30,10 @@ button {
 .active {
   background-color: #0890b220;
   color: var(--color-zaajel-primary);
+}
+
+* {
+  font-family: "ReadexPro", sans-serif;
 }
 
 /* Scrollbar styles for modern browsers */

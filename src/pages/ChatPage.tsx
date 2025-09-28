@@ -88,15 +88,15 @@ export default function ChatPage({ CID, uid }: { CID: string; uid: string }) {
   }, [messages]);
 
   const addMessage = async (newMessage: string) => {
-    sendSound.play();
     if (!newMessage.trim() || !CID || !auth.currentUser) return;
+    sendSound.play();
 
     // ✅ استخدم serverTimestamp بشكل صحيح
     const msg = {
       from: auth.currentUser.uid,
       to: uid,
       title: newMessage,
-      createdAt: serverTimestamp(), // ✅ بدون تحويل لـ Timestamp
+      createdAt: serverTimestamp(),
       Fseen: false,
       Tseen: false,
     };
