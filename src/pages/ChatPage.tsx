@@ -14,14 +14,12 @@ import Message from "../components/Message";
 import type { ChatMessage } from "../types/ChatMessage";
 import EmojiPicker from "emoji-picker-react";
 import type { EmojiClickData } from "emoji-picker-react";
-import userMessage from "../assets/avatar-2.jpg";
 import StateCircle from "../components/StateCircle";
-import sendSoundFile from "../assets/sounds/send.mp3";
 
 export default function ChatPage() {
   const [message, setMessage] = useState<string>("");
   const [showEmoji, setShowEmoji] = useState<boolean>(false);
-  const sendSound = new Audio(sendSoundFile);
+  const sendSound = new Audio("/sounds/send.mp3");
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       title: "Hey! How are you doing today?",
@@ -95,7 +93,7 @@ export default function ChatPage() {
           </button>
           <div className="relative">
             <img
-              src={userMessage}
+              src="/assets/avatar-2.jpg"
               alt="user profile"
               className="w-12 h-12 rounded-full border-2 border-white object-cover shadow-sm"
             />

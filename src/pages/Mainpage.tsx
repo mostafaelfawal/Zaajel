@@ -15,8 +15,6 @@ import Modal from "../components/Modal";
 import UserSearch from "../components/UserSearch";
 
 import ChatPage from "./ChatPage";
-import user2 from "../assets/avatar-2.jpg";
-import user3 from "../assets/avatar-3.jpg";
 import { doc, getDoc, serverTimestamp, type DocumentData } from "firebase/firestore";
 import type { UserType } from "../types/userType";
 import { ref, set } from "firebase/database";
@@ -47,7 +45,7 @@ export default function Mainpage() {
       name: "Mike Chen",
       message: "Thanks for the project files!",
       time: "1:45 PM",
-      avatar: user2,
+      avatar: "/assets/avatar-2.jpg",
       isRead: true,
       isActive: true,
     },
@@ -55,7 +53,7 @@ export default function Mainpage() {
       name: "Alex Rodriguez",
       message: "Perfect! Let's schedule the meeting",
       time: "1:45 PM",
-      avatar: user3,
+      avatar: "/assets/avatar-3.jpg",
       isRead: false,
       isActive: false,
     },
