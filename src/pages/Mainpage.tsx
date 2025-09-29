@@ -35,6 +35,8 @@ export default function Mainpage() {
   const [searchUesr, setSearchUser] = useState<string>("");
   const [filteredUsers, setFilteredUsers] = useState<UserType[]>([]);
   const [zaajelUsers, setZaajelUsers] = useState<UserType[]>([]);
+  const [chatsHistory, setChatsHistory] = useState<UserType[]>([]);
+  const uid = auth.currentUser?.uid || "";
 
   useEffect(() => {
     setTimeout(() => {
@@ -67,7 +69,6 @@ export default function Mainpage() {
 
   useEffect(() => {
     async function fetchChats() {
-      const uid = auth.currentUser?.uid;
       if (!uid) return;
 
       // 1. هات كل الدوكيمنتس من /chats
@@ -88,17 +89,16 @@ export default function Mainpage() {
 
         if (otherUserSnap.exists()) {
           userList.push({
-            id: otherUid,
             ...(otherUserSnap.data() as UserType),
           });
         }
       }
 
-      setZaajelUsers(userList); // خزّنهم في الـ state
+      setChatsHistory(userList); // خزّنهم في الـ state
     }
 
     fetchChats();
-  }, []);
+  }, [uid]);
 
   async function logOut() {
     const uid = auth.currentUser?.uid;
@@ -140,8 +140,8 @@ export default function Mainpage() {
 
         {/* Conversation list */}
         <ul className="flex flex-col gap-2 overflow-y-auto">
-          {zaajelUsers.length > 0 ? (
-            zaajelUsers.map((user) => (
+          {chatsHistory.length > 0 ? (
+            chatsHistory.map((user) => (
               <UserChat
                 key={user.id}
                 name={user.name}
@@ -149,7 +149,7 @@ export default function Mainpage() {
                 time={""} // هنا ممكن تحط آخر وقت رسالة
                 avatar={user.avatar}
                 isRead={true}
-                isActive={user.state} // لو عندك حالة المستخدم
+                isActive={true} // لو عندك حالة المستخدم
                 openChat={() => {
                   setSelectedUser(user.id);
                   setSelectedChat(

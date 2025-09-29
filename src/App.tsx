@@ -23,8 +23,6 @@ export default function App() {
         });
         if (token) {
           console.log("FCM Token:", token);
-          // هنا خزنه في قاعدة البيانات تحت uid المستخدم
-          // مثال: setDoc(doc(db, "users", user.uid), { fcmToken: token }, { merge: true });
         } else {
           console.log("مافيش token, المستخدم رفض الإشعارات");
         }
