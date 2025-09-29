@@ -5,14 +5,19 @@ export default function UserInfo({
   name,
   state,
   avatar,
+  setInChat,
 }: {
   name: string;
   state: boolean;
   avatar: string;
+  setInChat: VoidFunction;
 }) {
   return (
     <div className="flex items-center gap-3">
-      <button className="md:hidden block p-2 hover:bg-white/10 rounded-full transition duration-200">
+      <button
+        onClick={setInChat}
+        className="md:hidden block p-2 hover:bg-white/10 rounded-full transition duration-200"
+      >
         <FaArrowLeft />
       </button>
       <div className="relative">

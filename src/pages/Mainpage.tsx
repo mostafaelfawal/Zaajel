@@ -81,7 +81,11 @@ export default function Mainpage() {
   return (
     <div className="flex h-screen font-sans">
       {/* Sidebar */}
-      <aside className="w-80 border-r border-gray-200 p-6 md:flex hidden flex-col bg-white">
+      <aside
+        className={`border-r border-gray-200 p-6 md:w-80 w-screen ${
+          inChat ? "hidden" : "flex"
+        } flex-col bg-white`}
+      >
         {/* Header */}
         <SideBarHidder
           openModal={() => setModal(true)}
@@ -133,7 +137,11 @@ export default function Mainpage() {
 
       {/* Main Content */}
       {inChat ? (
-        <ChatPage CID={selectedChat} uid={selectedUser} />
+        <ChatPage
+          setInChat={() => setInChat(false)}
+          CID={selectedChat}
+          uid={selectedUser}
+        />
       ) : (
         <WelcomeMain />
       )}

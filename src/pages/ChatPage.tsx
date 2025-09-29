@@ -20,7 +20,7 @@ import {
 import { auth, db, rtdb } from "../firebase";
 import toast from "react-hot-toast";
 
-export default function ChatPage({ CID, uid }: { CID: string; uid: string }) {
+export default function ChatPage({ CID, uid, setInChat }: { CID: string; uid: string; setInChat: VoidFunction }) {
   const [message, setMessage] = useState<string>(""); // Input message
   const [showEmoji, setShowEmoji] = useState<boolean>(false);
   const sendSound = new Audio("/sounds/send.mp3");
@@ -116,7 +116,7 @@ export default function ChatPage({ CID, uid }: { CID: string; uid: string }) {
 
   return (
     <div className="flex flex-col w-full">
-      <Header name={userTo.name} state={userTo.state} avatar={userTo.avatar} />{" "}
+      <Header setInChat={setInChat} name={userTo.name} state={userTo.state} avatar={userTo.avatar} />{" "}
       {/* Message Section */}
       <MessageSection
         messages={messages}
