@@ -83,7 +83,7 @@ export default function Mainpage() {
       {/* Sidebar */}
       <aside
         className={`border-r border-gray-200 p-6 md:w-80 w-screen ${
-          inChat ? "hidden" : "flex"
+          inChat ? "hidden md:flex" : "flex"
         } flex-col bg-white`}
       >
         {/* Header */}

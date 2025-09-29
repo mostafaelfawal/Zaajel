@@ -19,6 +19,7 @@ import {
 } from "firebase/firestore";
 import { auth, db, rtdb } from "../firebase";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 export default function ChatPage({
   CID,
@@ -125,22 +126,24 @@ export default function ChatPage({
 
         if (token) {
           // 3. إرسال الإشعار عن طريق FCM API
-          await fetch("https://fcm.googleapis.com/fcm/send", {
-            method: "POST",
-            headers: {
-              Authorization:
-                "key=BItvrN22fc_8YnY79u1hr-PkqwvcY35tcS79nssesF-n1GYRLqa_yN90lvh3QIPqlWR0XQYBLTnJi7F2z04tccA ",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
+          await axios.post(
+            "https://fcm.googleapis.com/fcm/send",
+            {
               to: token,
               notification: {
                 title: auth.currentUser.displayName || "مستخدم",
                 body: newMessage,
                 icon: "/icon.svg",
               },
-            }),
-          });
+            },
+            {
+              headers: {
+                Authorization:
+                "key=BItvrN22fc_8YnY79u1hr-PkqwvcY35tcS79nssesF-n1GYRLqa_yN90lvh3QIPqlWR0XQYBLTnJi7F2z04tccA",
+                "Content-Type": "application/json",
+              },
+            }
+          );
         }
       }
     } catch (error) {
@@ -159,7 +162,7 @@ export default function ChatPage({
         name={userTo.name}
         state={userTo.state}
         avatar={userTo.avatar}
-      />{" "}
+      />
       {/* Message Section */}
       <MessageSection
         messages={messages}

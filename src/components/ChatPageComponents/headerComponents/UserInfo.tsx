@@ -13,7 +13,7 @@ export default function UserInfo({
   setInChat: VoidFunction;
 }) {
   return (
-    <div className="flex items-center gap-3">
+    <div className="sticky top-0 flex items-center gap-3">
       <button
         onClick={setInChat}
         className="md:hidden block p-2 hover:bg-white/10 rounded-full transition duration-200"
