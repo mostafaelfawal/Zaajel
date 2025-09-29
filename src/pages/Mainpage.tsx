@@ -3,7 +3,6 @@ import { auth, db, rtdb } from "../firebase";
 import toast from "react-hot-toast";
 import { FaDoorOpen } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import type { UserChatType } from "../types/userChat";
 // Components
 import UserChat from "../components/mainPageComponents/UserChatCard";
 import WelcomeMain from "../components/mainPageComponents/WelocomeMain";
@@ -16,8 +15,10 @@ import UserSearch from "../components/mainPageComponents/UserSearch";
 
 import ChatPage from "./ChatPage";
 import {
+  collection,
   doc,
   getDoc,
+  getDocs,
   serverTimestamp,
   type DocumentData,
 } from "firebase/firestore";
@@ -63,24 +64,42 @@ export default function Mainpage() {
     }
     fetchUser();
   }, []);
-  const messages: UserChatType[] = [
-    {
-      name: "Mike Chen",
-      message: "Thanks for the project files!",
-      time: "1:45 PM",
-      avatar: "/assets/avatar-2.jpg",
-      isRead: true,
-      isActive: true,
-    },
-    {
-      name: "Alex Rodriguez",
-      message: "Perfect! Let's schedule the meeting",
-      time: "1:45 PM",
-      avatar: "/assets/avatar-3.jpg",
-      isRead: false,
-      isActive: false,
-    },
-  ];
+
+  useEffect(() => {
+    async function fetchChats() {
+      const uid = auth.currentUser?.uid;
+      if (!uid) return;
+
+      // 1. هات كل الدوكيمنتس من /chats
+      const chatsSnap = await getDocs(collection(db, "chats"));
+
+      const userList: UserType[] = [];
+
+      for (const docSnap of chatsSnap.docs) {
+        const chatId = docSnap.id; // مثلا "uid1_uid2"
+        if (!chatId.includes(uid)) continue; // مش ليك
+
+        // 2. استخرج الـ otherUid
+        const otherUid = chatId.replace(uid, "").replace("_", "");
+
+        // 3. هات بيانات المستخدم من /users/{otherUid}
+        const otherUserRef = doc(db, "users", otherUid);
+        const otherUserSnap = await getDoc(otherUserRef);
+
+        if (otherUserSnap.exists()) {
+          userList.push({
+            id: otherUid,
+            ...(otherUserSnap.data() as UserType),
+          });
+        }
+      }
+
+      setZaajelUsers(userList); // خزّنهم في الـ state
+    }
+
+    fetchChats();
+  }, []);
+
   async function logOut() {
     const uid = auth.currentUser?.uid;
     if (uid) {
@@ -121,17 +140,23 @@ export default function Mainpage() {
 
         {/* Conversation list */}
         <ul className="flex flex-col gap-2 overflow-y-auto">
-          {messages.length > 0 ? (
-            messages.map((chat, idx) => (
+          {zaajelUsers.length > 0 ? (
+            zaajelUsers.map((user) => (
               <UserChat
-                key={idx}
-                name={chat.name}
-                message={chat.message}
-                time={chat.time}
-                avatar={chat.avatar}
-                isRead={chat.isRead}
-                isActive={chat.isActive}
-                openChat={() => setInChat(true)}
+                key={user.id}
+                name={user.name}
+                message={"..."} // هنا ممكن تجيب آخر رسالة من الـ chat
+                time={""} // هنا ممكن تحط آخر وقت رسالة
+                avatar={user.avatar}
+                isRead={true}
+                isActive={user.state} // لو عندك حالة المستخدم
+                openChat={() => {
+                  setSelectedUser(user.id);
+                  setSelectedChat(
+                    uid < user.id ? `${uid}_${user.id}` : `${user.id}_${uid}`
+                  );
+                  setInChat(true);
+                }}
               />
             ))
           ) : (
