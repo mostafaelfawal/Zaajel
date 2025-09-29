@@ -1,8 +1,12 @@
 // public/firebase-messaging-sw.js
-import { initializeApp } from "firebase/app";
-import { getMessaging } from "firebase/messaging/sw";
+importScripts(
+  "https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"
+);
+importScripts(
+  "https://www.gstatic.com/firebasejs/9.6.1/firebase-messaging-compat.js"
+);
 
-const firebaseConfig = {
+firebase.initializeApp({
   apiKey: "AIzaSyB86JuF4a2Nc5fmZvP9HFUEiiewz0i9ucM",
   authDomain: "zaajel-251a7.firebaseapp.com",
   projectId: "zaajel-251a7",
@@ -10,7 +14,6 @@ const firebaseConfig = {
   messagingSenderId: "772661753555",
   appId: "1:772661753555:web:d824c275e925db02ec4626",
   measurementId: "G-Q31JNMSZLX",
-};
+});
 
-const app = initializeApp(firebaseConfig);
-getMessaging(app);
+const messaging = firebase.messaging();

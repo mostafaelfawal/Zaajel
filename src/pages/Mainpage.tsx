@@ -29,9 +29,25 @@ export default function Mainpage() {
   const [modalType, setModalType] = useState("");
   const [inChat, setInChat] = useState(false);
   const [userData, setUserData] = useState<DocumentData | null>(null);
-  const [zaajelUsers, setZaajelUsers] = useState<UserType[]>([]);
   const [selectedUser, setSelectedUser] = useState<string>("");
   const [selectedChat, setSelectedChat] = useState<string>("");
+  const [searchUesr, setSearchUser] = useState<string>("");
+  const [filteredUsers, setFilteredUsers] = useState<UserType[]>([]);
+  const [zaajelUsers, setZaajelUsers] = useState<UserType[]>([]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (!searchUesr.trim()) {
+        setFilteredUsers(zaajelUsers); // لو السيرش فاضي اعرض كل اليوزرز
+      } else {
+        setFilteredUsers(
+          zaajelUsers.filter((user) =>
+            user.name.toLowerCase().includes(searchUesr.toLowerCase())
+          )
+        );
+      }
+    }, 300);
+  }, [searchUesr, zaajelUsers]);
 
   useEffect(() => {
     async function fetchUser() {
@@ -182,8 +198,10 @@ export default function Mainpage() {
             <input
               className="w-full px-4 py-3 pr-12 border rounded-full border-gray-200
                 focus:border-transparent focus:outline-none focus:ring-2
-                focus:ring-zaajel-primary focus:bg-white transition-all resize-none overflow-hidden"
+              focus:ring-zaajel-primary focus:bg-white transition-all resize-none overflow-hidden"
               placeholder="Search by email or name..."
+              onChange={(e) => setSearchUser(e.target.value)}
+              value={searchUesr}
             />
 
             {/* Section Title */}
@@ -193,20 +211,24 @@ export default function Mainpage() {
 
             {/* User List */}
             <div className="overflow-y-auto max-h-[60vh]">
-              {zaajelUsers.map((user) => (
-                <UserSearch
-                  key={user.id}
-                  id={user.id}
-                  name={user.name}
-                  email={user.email}
-                  avatar={user.avatar}
-                  isActive={user.state}
-                  closeModal={() => setModal(false)}
-                  setUserId={setSelectedUser}
-                  setSelectedChat={setSelectedChat}
-                  openChat={() => setInChat(true)}
-                />
-              ))}
+              {filteredUsers.length > 0 ? (
+                filteredUsers.map((user) => (
+                  <UserSearch
+                    key={user.id}
+                    id={user.id}
+                    name={user.name}
+                    email={user.email}
+                    avatar={user.avatar}
+                    isActive={user.state}
+                    closeModal={() => setModal(false)}
+                    setUserId={setSelectedUser}
+                    setSelectedChat={setSelectedChat}
+                    openChat={() => setInChat(true)}
+                  />
+                ))
+              ) : (
+                <p className="text-error">User not found</p>
+              )}
             </div>
           </div>
         </Modal>
