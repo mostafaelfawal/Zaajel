@@ -18,7 +18,7 @@ export default function Footer({
   handleEmojiClick: (emojiData: EmojiClickData, event: MouseEvent) => void;
 }) {
   return (
-    <footer className="px-6 py-4 bg-white border-t border-gray-200 flex gap-2 items-center">
+    <footer className="md:px-6 px-4 py-4 bg-white border-t border-gray-200 flex gap-2 items-center">
       <Tooltips side="top" label="Attach file">
         <button className="p-2 text-gray-500 hover:text-zaajel-secondary transition-colors">
           <FaPaperclip size={20} />
@@ -43,7 +43,7 @@ export default function Footer({
           }}
           placeholder="Type a message..."
           rows={1}
-          className="w-full px-4 py-3 pr-12 border rounded-full border-gray-200
+          className="w-full min-w-50 px-4 py-3 pr-12 border rounded-full border-gray-200
               focus:border-transparent focus:outline-none focus:ring-2
               focus:ring-zaajel-primary focus:bg-white transition-all resize-none overflow-hidden"
         />

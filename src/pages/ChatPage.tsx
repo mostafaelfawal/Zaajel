@@ -20,7 +20,15 @@ import {
 import { auth, db, rtdb } from "../firebase";
 import toast from "react-hot-toast";
 
-export default function ChatPage({ CID, uid, setInChat }: { CID: string; uid: string; setInChat: VoidFunction }) {
+export default function ChatPage({
+  CID,
+  uid,
+  setInChat,
+}: {
+  CID: string;
+  uid: string;
+  setInChat: VoidFunction;
+}) {
   const [message, setMessage] = useState<string>(""); // Input message
   const [showEmoji, setShowEmoji] = useState<boolean>(false);
   const sendSound = new Audio("/sounds/send.mp3");
@@ -91,7 +99,6 @@ export default function ChatPage({ CID, uid, setInChat }: { CID: string; uid: st
     if (!newMessage.trim() || !CID || !auth.currentUser) return;
     sendSound.play();
 
-    // ✅ استخدم serverTimestamp بشكل صحيح
     const msg = {
       from: auth.currentUser.uid,
       to: uid,
@@ -104,7 +111,38 @@ export default function ChatPage({ CID, uid, setInChat }: { CID: string; uid: st
     try {
       setMessage("");
       setShowEmoji(false);
+
+      // 1. حفظ الرسالة في Firestore
       await addDoc(collection(db, "chats", CID, "messages"), msg);
+
+      // 2. جلب fcmToken بتاع المستقبل
+      const toRef = doc(db, "users", uid);
+      const toSnap = await getDoc(toRef);
+
+      if (toSnap.exists()) {
+        const toUserData = toSnap.data();
+        const token = toUserData.fcmToken;
+
+        if (token) {
+          // 3. إرسال الإشعار عن طريق FCM API
+          await fetch("https://fcm.googleapis.com/fcm/send", {
+            method: "POST",
+            headers: {
+              Authorization:
+                "key=BItvrN22fc_8YnY79u1hr-PkqwvcY35tcS79nssesF-n1GYRLqa_yN90lvh3QIPqlWR0XQYBLTnJi7F2z04tccA ",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              to: token,
+              notification: {
+                title: auth.currentUser.displayName || "مستخدم",
+                body: newMessage,
+                icon: "/icon.svg",
+              },
+            }),
+          });
+        }
+      }
     } catch (error) {
       toast.error("Error sending message: " + error);
     }
@@ -116,7 +154,12 @@ export default function ChatPage({ CID, uid, setInChat }: { CID: string; uid: st
 
   return (
     <div className="flex flex-col w-full">
-      <Header setInChat={setInChat} name={userTo.name} state={userTo.state} avatar={userTo.avatar} />{" "}
+      <Header
+        setInChat={setInChat}
+        name={userTo.name}
+        state={userTo.state}
+        avatar={userTo.avatar}
+      />{" "}
       {/* Message Section */}
       <MessageSection
         messages={messages}

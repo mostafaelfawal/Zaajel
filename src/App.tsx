@@ -7,9 +7,42 @@ import Mainpage from "./pages/Mainpage";
 import LoadingSpinner from "./components/Loading";
 import { ref, onDisconnect, set, serverTimestamp } from "firebase/database";
 import { useEffect } from "react";
+import { getToken, onMessage } from "firebase/messaging";
+import { messaging } from "./firebase";
 
 export default function App() {
   const [user, loading] = useAuthState(auth);
+  useEffect(() => {
+    if (!user) return;
+
+    const requestPermission = async () => {
+      try {
+        const token = await getToken(messaging, {
+          vapidKey:
+            "BItvrN22fc_8YnY79u1hr-PkqwvcY35tcS79nssesF-n1GYRLqa_yN90lvh3QIPqlWR0XQYBLTnJi7F2z04tccA",
+        });
+        if (token) {
+          console.log("FCM Token:", token);
+          // هنا خزنه في قاعدة البيانات تحت uid المستخدم
+          // مثال: setDoc(doc(db, "users", user.uid), { fcmToken: token }, { merge: true });
+        } else {
+          console.log("مافيش token, المستخدم رفض الإشعارات");
+        }
+      } catch (err) {
+        console.error("خطأ في جلب التوكن:", err);
+      }
+    };
+
+    requestPermission();
+
+    // استقبال الإشعارات لما الأبليكيشن مفتوح
+    const unsubscribe = onMessage(messaging, (payload) => {
+      console.log("رسالة جديدة:", payload);
+      alert(`${payload.notification?.title}: ${payload.notification?.body}`);
+    });
+
+    return () => unsubscribe();
+  }, [user]);
 
   useEffect(() => {
     const uid = auth.currentUser?.uid;

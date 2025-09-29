@@ -23,11 +23,11 @@ export default function UserInfo({
       <div className="relative">
         {avatar ? (
           <img
-            className="outline-3 outline-zaajel-primary w-12 h-12 rounded-full object-cover border-2 border-white"
+            className="outline-3 outline-zaajel-primary min-w-12 w-12 h-12 rounded-full object-cover border-2 border-white"
             src={avatar}
           />
         ) : (
-          <FaUser className="outline-3 outline-zaajel-primary text-zaajel-secondary w-12 h-12 rounded-full object-cover border-2 border-white" />
+          <FaUser className="outline-3 outline-zaajel-primary text-zaajel-secondary min-w-12 w-12 h-12 rounded-full object-cover border-2 border-white" />
         )}
         <StateCircle state={state} />
       </div>
